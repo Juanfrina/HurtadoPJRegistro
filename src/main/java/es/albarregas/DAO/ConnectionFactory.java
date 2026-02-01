@@ -11,15 +11,17 @@ import javax.sql.DataSource;
  * Factory para obtener conexiones a la base de datos.
  * Gestiona dos DataSources:
  * - Usuario: para operaciones de lectura, inserción y actualización de usuarios
- * - AdminRegistro: para operaciones que requieren permisos de administrador (borrado)
+ * - AdminRegistro: para operaciones que requieren permisos de administrador
+ * (borrado)
+ * 
  * @author jfco1
  */
 public class ConnectionFactory {
-    
+
     private static ConnectionFactory instance;
     private DataSource dsUsuario;
     private DataSource dsAdmin;
-    
+
     /**
      * Constructor privado (patrón Singleton).
      * Inicializa los dos DataSources desde JNDI.
@@ -28,20 +30,21 @@ public class ConnectionFactory {
         try {
             Context initContext = new InitialContext();
             Context envContext = (Context) initContext.lookup("java:/comp/env");
-            
+
             // DataSource para operaciones de usuario (lectura, inserción, actualización)
             dsUsuario = (DataSource) envContext.lookup("jdbc/Usuario");
-            
+
             // DataSource para operaciones de admin (cualquier operación incluido DELETE)
             dsAdmin = (DataSource) envContext.lookup("jdbc/AdminRegistro");
-            
+
         } catch (NamingException e) {
             throw new RuntimeException("Error al inicializar ConnectionFactory: " + e.getMessage(), e);
         }
     }
-    
+
     /**
      * Obtiene la instancia única de ConnectionFactory.
+     * 
      * @return La instancia de ConnectionFactory
      */
     public static synchronized ConnectionFactory getInstance() {
@@ -50,29 +53,32 @@ public class ConnectionFactory {
         }
         return instance;
     }
-    
+
     /**
      * Obtiene una conexión del DataSource de usuario.
      * Para operaciones de lectura, inserción y actualización de usuarios.
+     * 
      * @return Una conexión a la base de datos
      * @throws SQLException Si ocurre un error al obtener la conexión
      */
     public Connection getConnectionUsuario() throws SQLException {
         return dsUsuario.getConnection();
     }
-    
+
     /**
      * Obtiene una conexión del DataSource de administrador.
      * Para operaciones que requieren permisos de admin (ej: DELETE).
+     * 
      * @return Una conexión a la base de datos
      * @throws SQLException Si ocurre un error al obtener la conexión
      */
     public Connection getConnectionAdmin() throws SQLException {
         return dsAdmin.getConnection();
     }
-    
+
     /**
      * Cierra una conexión de forma segura.
+     * 
      * @param conn La conexión a cerrar
      */
     public static void closeConnection(Connection conn) {

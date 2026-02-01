@@ -1,7 +1,7 @@
 package es.albarregas.controllers;
 
-import es.albarregas.beans.Genero;
 import es.albarregas.beans.Usuario;
+import es.albarregas.beans.Usuario.Genero;
 import es.albarregas.DAO.IUsuarioDAO;
 import es.albarregas.DAOFactory.DAOFactory;
 import es.albarregas.models.EnumConverter;
@@ -19,9 +19,10 @@ import org.apache.commons.beanutils.ConvertUtils;
 
 /**
  * Controlador para el registro de nuevos usuarios.
+ * 
  * @author jfco1
  */
-@WebServlet(name = "RegistroController", urlPatterns = {"/RegistroController"})
+@WebServlet(name = "RegistroController", urlPatterns = { "/RegistroController" })
 public class RegistroController extends HttpServlet {
 
     private IUsuarioDAO usuarioDAO;
@@ -43,31 +44,31 @@ public class RegistroController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String accion = request.getParameter("accion");
-        
+
         if ("cancelar".equals(accion)) {
             response.sendRedirect(request.getContextPath() + "/LoginController");
             return;
         }
-        
+
         try {
             // Crear usuario y poblarlo con BeanUtils
             Usuario usuario = new Usuario();
             BeanUtils.populate(usuario, request.getParameterMap());
-            
+
             // Validar campos obligatorios
             if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty() ||
-                usuario.getApellidos() == null || usuario.getApellidos().trim().isEmpty() ||
-                usuario.getUsername() == null || usuario.getUsername().trim().isEmpty() ||
-                usuario.getPassword() == null || usuario.getPassword().trim().isEmpty()) {
-                
+                    usuario.getApellidos() == null || usuario.getApellidos().trim().isEmpty() ||
+                    usuario.getUsername() == null || usuario.getUsername().trim().isEmpty() ||
+                    usuario.getPassword() == null || usuario.getPassword().trim().isEmpty()) {
+
                 request.setAttribute("error", "Todos los campos son obligatorios");
                 request.setAttribute("usuario", usuario);
                 request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
                 return;
             }
-            
+
             // Verificar si el username ya existe
             if (usuarioDAO.existeUsername(usuario.getUsername())) {
                 request.setAttribute("error", "El nombre de usuario ya existe");
@@ -75,32 +76,32 @@ public class RegistroController extends HttpServlet {
                 request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
                 return;
             }
-            
+
             // Encriptar contraseña
             String passwordOriginal = usuario.getPassword();
             usuario.setPassword(SecurityUtils.encriptarMD5(passwordOriginal));
-            
+
             // Establecer rol como normal
             usuario.setRol("normal");
-            
+
             // ultimoAcceso queda null para nuevo usuario
             usuario.setUltimoAcceso(null);
-            
+
             // Insertar usuario
             if (usuarioDAO.insertar(usuario)) {
                 // Registro exitoso - crear sesión
                 HttpSession session = request.getSession(true);
                 session.setAttribute("usuario", usuario);
                 session.setAttribute("primerAcceso", true);
-                
+
                 // Redirigir al menú de usuario normal
-                response.sendRedirect(request.getContextPath() + "/JSP/menu_normal.jsp");
+                response.sendRedirect(request.getContextPath() + "/JSP/menuNormal.jsp");
             } else {
                 request.setAttribute("error", "Error al registrar el usuario. Inténtelo de nuevo.");
                 request.setAttribute("usuario", usuario);
                 request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
             }
-            
+
         } catch (IllegalAccessException | InvocationTargetException e) {
             request.setAttribute("error", "Error al procesar los datos: " + e.getMessage());
             request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);

@@ -16,9 +16,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Controlador para el login de usuarios.
+ * 
  * @author jfco1
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/LoginController"})
+@WebServlet(name = "LoginController", urlPatterns = { "/LoginController" })
 public class LoginController extends HttpServlet {
 
     private IUsuarioDAO usuarioDAO;
@@ -41,7 +42,7 @@ public class LoginController extends HttpServlet {
                 }
             }
         }
-        
+
         // Redirigir a la página de login
         request.getRequestDispatcher("/JSP/login.jsp").forward(request, response);
     }
@@ -49,30 +50,30 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String recordar = request.getParameter("recordar");
-        
+
         // Validar campos vacíos
-        if (username == null || username.trim().isEmpty() || 
-            password == null || password.trim().isEmpty()) {
+        if (username == null || username.trim().isEmpty() ||
+                password == null || password.trim().isEmpty()) {
             request.setAttribute("error", "Usuario y contraseña son obligatorios");
             request.getRequestDispatcher("/JSP/login.jsp").forward(request, response);
             return;
         }
-        
+
         // Encriptar contraseña y buscar usuario
         String passwordMD5 = SecurityUtils.encriptarMD5(password);
         Usuario usuario = usuarioDAO.buscarPorCredenciales(username.trim(), passwordMD5);
-        
+
         if (usuario == null) {
             request.setAttribute("error", "Usuario no registrado o credenciales incorrectas");
             request.setAttribute("usernameRecordado", username);
             request.getRequestDispatcher("/JSP/login.jsp").forward(request, response);
             return;
         }
-        
+
         // Usuario válido - gestionar cookie de recordar
         if (recordar != null && "on".equals(recordar)) {
             Cookie cookie = new Cookie("recordarUsuario", username);
@@ -86,23 +87,28 @@ public class LoginController extends HttpServlet {
             cookie.setPath(request.getContextPath());
             response.addCookie(cookie);
         }
-        
+
         // Guardar el último acceso anterior antes de actualizarlo
         LocalDateTime ultimoAccesoAnterior = usuario.getUltimoAcceso();
-        
+        String ultimoAccesoFormateado = null;
+        if (ultimoAccesoAnterior != null) {
+            ultimoAccesoFormateado = ultimoAccesoAnterior.format(
+                    java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm:ss"));
+        }
+
         // Actualizar último acceso en BD
         usuarioDAO.actualizarUltimoAcceso(usuario.getIdUsuario());
-        
+
         // Crear sesión y guardar usuario
         HttpSession session = request.getSession(true);
         session.setAttribute("usuario", usuario);
-        session.setAttribute("ultimoAccesoAnterior", ultimoAccesoAnterior);
-        
+        session.setAttribute("ultimoAccesoAnterior", ultimoAccesoFormateado);
+
         // Redirigir según el rol
         if (usuario.isAdmin()) {
-            response.sendRedirect(request.getContextPath() + "/JSP/menu_admin.jsp");
+            response.sendRedirect(request.getContextPath() + "/JSP/menuAdmin.jsp");
         } else {
-            response.sendRedirect(request.getContextPath() + "/JSP/menu_normal.jsp");
+            response.sendRedirect(request.getContextPath() + "/JSP/menuNormal.jsp");
         }
     }
 

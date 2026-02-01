@@ -1,6 +1,6 @@
 es\albarregas\DAOFactory\DAOFactory.class
+es\albarregas\beans\Usuario$Genero.class
 es\albarregas\models\EnumConverter.class
-es\albarregas\beans\Genero.class
 es\albarregas\DAO\IAuditoriaDAO.class
 es\albarregas\listener\AuditoriaSessionListener.class
 es\albarregas\DAO\UsuarioDAO.class

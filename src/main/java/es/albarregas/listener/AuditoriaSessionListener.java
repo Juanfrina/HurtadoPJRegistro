@@ -13,9 +13,12 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
- * Listener para registrar auditorías cuando un usuario normal inicia o cierra sesión.
- * Implementa tanto HttpSessionAttributeListener como HttpSessionListener para capturar
+ * Listener para registrar auditorías cuando un usuario normal inicia o cierra
+ * sesión.
+ * Implementa tanto HttpSessionAttributeListener como HttpSessionListener para
+ * capturar
  * todos los casos de cierre de sesión.
+ * 
  * @author jfco1
  */
 @WebListener
@@ -29,19 +32,19 @@ public class AuditoriaSessionListener implements HttpSessionAttributeListener, H
     public void attributeAdded(HttpSessionBindingEvent event) {
         if ("usuario".equals(event.getName())) {
             Usuario usuario = (Usuario) event.getValue();
-            
+
             // Solo registrar auditoría para usuarios normales
             if (usuario != null && !usuario.isAdmin()) {
                 try {
                     IAuditoriaDAO auditoriaDAO = DAOFactory.getInstance().getAuditoriaDAO();
-                    
+
                     Auditoria auditoria = new Auditoria();
                     auditoria.setIdUsuario(usuario.getIdUsuario());
                     auditoria.setFechaEntrada(LocalDateTime.now());
                     auditoria.setFechaSalida(null); // Se actualizará al cerrar sesión
-                    
+
                     int idAuditoria = auditoriaDAO.insertarEntrada(auditoria);
-                    
+
                     // Guardar el ID de auditoría en la sesión para actualizar la salida
                     if (idAuditoria > 0) {
                         event.getSession().setAttribute("idAuditoria", idAuditoria);
@@ -55,7 +58,8 @@ public class AuditoriaSessionListener implements HttpSessionAttributeListener, H
 
     /**
      * Se ejecuta cuando se elimina un atributo de la sesión.
-     * Si es el atributo "usuario" y hay una auditoría pendiente, registra la salida.
+     * Si es el atributo "usuario" y hay una auditoría pendiente, registra la
+     * salida.
      */
     @Override
     public void attributeRemoved(HttpSessionBindingEvent event) {
@@ -71,7 +75,7 @@ public class AuditoriaSessionListener implements HttpSessionAttributeListener, H
     public void attributeReplaced(HttpSessionBindingEvent event) {
         // No necesitamos hacer nada cuando se reemplaza el atributo
     }
-    
+
     /**
      * Se ejecuta cuando se crea una sesión.
      */
@@ -79,7 +83,7 @@ public class AuditoriaSessionListener implements HttpSessionAttributeListener, H
     public void sessionCreated(HttpSessionEvent se) {
         // No necesitamos hacer nada al crear la sesión
     }
-    
+
     /**
      * Se ejecuta cuando se destruye/invalida una sesión.
      * Esto captura el caso de session.invalidate() y timeout.
@@ -88,14 +92,14 @@ public class AuditoriaSessionListener implements HttpSessionAttributeListener, H
     public void sessionDestroyed(HttpSessionEvent se) {
         registrarSalida(se.getSession());
     }
-    
+
     /**
      * Registra la hora de salida en la auditoría.
      */
     private void registrarSalida(HttpSession session) {
         try {
             Integer idAuditoria = (Integer) session.getAttribute("idAuditoria");
-            
+
             if (idAuditoria != null && idAuditoria > 0) {
                 IAuditoriaDAO auditoriaDAO = DAOFactory.getInstance().getAuditoriaDAO();
                 auditoriaDAO.actualizarSalida(idAuditoria);

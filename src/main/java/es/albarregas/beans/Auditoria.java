@@ -8,17 +8,18 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Bean que representa un registro de auditoría.
+ * 
  * @author jfco1
  */
 public class Auditoria implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private int idAuditoria;
     private int idUsuario;
     private LocalDateTime fechaEntrada;
     private LocalDateTime fechaSalida;
-    
+
     // Campos adicionales para mostrar en vistas
     private String nombreUsuario;
     private String apellidosUsuario;
@@ -84,35 +85,41 @@ public class Auditoria implements Serializable {
 
     // Métodos auxiliares para formateo
     public String getFechaFormateada() {
-        if (fechaEntrada == null) return "";
+        if (fechaEntrada == null)
+            return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return fechaEntrada.format(formatter);
     }
 
     public String getHoraEntradaFormateada() {
-        if (fechaEntrada == null) return "";
+        if (fechaEntrada == null)
+            return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return fechaEntrada.format(formatter);
     }
 
     public String getHoraSalidaFormateada() {
-        if (fechaSalida == null) return "";
+        if (fechaSalida == null)
+            return "";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return fechaSalida.format(formatter);
     }
 
     public LocalDate getFecha() {
-        if (fechaEntrada == null) return null;
+        if (fechaEntrada == null)
+            return null;
         return fechaEntrada.toLocalDate();
     }
 
     public LocalTime getHoraEntrada() {
-        if (fechaEntrada == null) return null;
+        if (fechaEntrada == null)
+            return null;
         return fechaEntrada.toLocalTime();
     }
 
     public LocalTime getHoraSalida() {
-        if (fechaSalida == null) return null;
+        if (fechaSalida == null)
+            return null;
         return fechaSalida.toLocalTime();
     }
 }

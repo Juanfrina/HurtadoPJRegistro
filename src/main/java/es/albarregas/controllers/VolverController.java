@@ -10,9 +10,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Controlador para cerrar sesión (logout).
+ * 
  * @author jfco1
  */
-@WebServlet(name = "VolverController", urlPatterns = {"/VolverController", "/LogoutController"})
+@WebServlet(name = "VolverController", urlPatterns = { "/VolverController", "/LogoutController" })
 public class VolverController extends HttpServlet {
 
     @Override
@@ -26,15 +27,15 @@ public class VolverController extends HttpServlet {
             throws ServletException, IOException {
         cerrarSesion(request, response);
     }
-    
-    private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) 
+
+    private void cerrarSesion(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         // Invalidar sesión
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
-        
+
         // Redirigir al login
         response.sendRedirect(request.getContextPath() + "/LoginController");
     }

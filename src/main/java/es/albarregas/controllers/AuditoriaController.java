@@ -17,9 +17,10 @@ import javax.servlet.http.HttpSession;
 
 /**
  * Controlador para la gestión de auditorías.
+ * 
  * @author jfco1
  */
-@WebServlet(name = "AuditoriaController", urlPatterns = {"/AuditoriaController"})
+@WebServlet(name = "AuditoriaController", urlPatterns = { "/AuditoriaController" })
 public class AuditoriaController extends HttpServlet {
 
     private IAuditoriaDAO auditoriaDAO;
@@ -32,31 +33,31 @@ public class AuditoriaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Verificar sesión y rol admin
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
             response.sendRedirect(request.getContextPath() + "/LoginController");
             return;
         }
-        
+
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         if (!usuario.isAdmin()) {
-            response.sendRedirect(request.getContextPath() + "/JSP/menu_normal.jsp");
+            response.sendRedirect(request.getContextPath() + "/JSP/menuNormal.jsp");
             return;
         }
-        
+
         // Obtener usuarios con auditorías para el selector
         List<Usuario> usuariosConAuditorias = auditoriaDAO.obtenerUsuariosConAuditorias();
         request.setAttribute("usuarios", usuariosConAuditorias);
-        
+
         // Procesar parámetros de filtro
         String idUsuarioStr = request.getParameter("idUsuario");
         String fechaStr = request.getParameter("fecha");
-        
+
         if (idUsuarioStr != null && !idUsuarioStr.isEmpty()) {
             int idUsuarioFiltro = Integer.parseInt(idUsuarioStr);
-            
+
             // Obtener fechas para el usuario seleccionado
             List<LocalDate> fechas;
             if (idUsuarioFiltro == 0) {
@@ -67,11 +68,11 @@ public class AuditoriaController extends HttpServlet {
             }
             request.setAttribute("fechas", fechas);
             request.setAttribute("idUsuarioSeleccionado", idUsuarioFiltro);
-            
+
             // Si hay fecha seleccionada, obtener auditorías
             if (fechaStr != null && !fechaStr.isEmpty()) {
                 List<Auditoria> auditorias;
-                
+
                 // Manejar caso "todas" las fechas
                 if ("todas".equalsIgnoreCase(fechaStr)) {
                     if (idUsuarioFiltro == 0) {
@@ -85,7 +86,7 @@ public class AuditoriaController extends HttpServlet {
                     // Fecha específica
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                     LocalDate fechaFiltro = LocalDate.parse(fechaStr, formatter);
-                    
+
                     if (idUsuarioFiltro == 0) {
                         // Todos los usuarios en esa fecha
                         auditorias = auditoriaDAO.obtenerPorFecha(fechaFiltro);
@@ -97,7 +98,7 @@ public class AuditoriaController extends HttpServlet {
                 request.setAttribute("fechaSeleccionada", fechaStr);
             }
         }
-        
+
         request.getRequestDispatcher("/JSP/auditorias.jsp").forward(request, response);
     }
 

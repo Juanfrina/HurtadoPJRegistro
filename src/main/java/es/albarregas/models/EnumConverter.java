@@ -1,6 +1,6 @@
 package es.albarregas.models;
 
-import es.albarregas.beans.Genero;
+import es.albarregas.beans.Usuario.Genero;
 import org.apache.commons.beanutils.Converter;
 
 /**

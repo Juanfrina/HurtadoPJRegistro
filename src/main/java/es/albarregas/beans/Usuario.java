@@ -6,12 +6,74 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Bean que representa un usuario del sistema.
+ * 
  * @author jfco1
  */
 public class Usuario implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
+    /**
+     * Enum que representa el género del usuario.
+     */
+    public enum Genero {
+        Mujer,
+        Hombre,
+        Otro;
+
+        /**
+         * Devuelve todos los valores del enum.
+         * Útil para iterar en JSP con JSTL.
+         */
+        public Genero[] getValues() {
+            return Genero.values();
+        }
+
+        /**
+         * Obtiene la inicial para guardar en BD (M, H, O).
+         */
+        public String getInicial() {
+            return this.name().substring(0, 1);
+        }
+
+        /**
+         * Obtiene el Genero a partir de la inicial de la BD.
+         */
+        public static Genero fromInicial(String inicial) {
+            if (inicial == null)
+                return null;
+            switch (inicial.toUpperCase()) {
+                case "M":
+                    return Mujer;
+                case "H":
+                    return Hombre;
+                case "O":
+                    return Otro;
+                default:
+                    return null;
+            }
+        }
+
+        /**
+         * Obtiene el Genero a partir del nombre completo (Mujer, Hombre, Otro).
+         */
+        public static Genero fromNombre(String nombre) {
+            if (nombre == null || nombre.trim().isEmpty())
+                return null;
+            try {
+                return Genero.valueOf(nombre.trim());
+            } catch (IllegalArgumentException e) {
+                // Intentar match ignorando mayúsculas
+                for (Genero g : Genero.values()) {
+                    if (g.name().equalsIgnoreCase(nombre.trim())) {
+                        return g;
+                    }
+                }
+                return null;
+            }
+        }
+    }
+
     private int idUsuario;
     private String nombre;
     private String apellidos;
@@ -26,8 +88,8 @@ public class Usuario implements Serializable {
     }
 
     // Constructor completo
-    public Usuario(int idUsuario, String nombre, String apellidos, Genero genero, 
-                   String username, String password, LocalDateTime ultimoAcceso, String rol) {
+    public Usuario(int idUsuario, String nombre, String apellidos, Genero genero,
+            String username, String password, LocalDateTime ultimoAcceso, String rol) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -113,8 +175,8 @@ public class Usuario implements Serializable {
         for (String palabra : palabras) {
             if (palabra.length() > 0) {
                 resultado.append(Character.toUpperCase(palabra.charAt(0)))
-                         .append(palabra.substring(1))
-                         .append(" ");
+                        .append(palabra.substring(1))
+                        .append(" ");
             }
         }
         return resultado.toString().trim();
@@ -138,4 +200,3 @@ public class Usuario implements Serializable {
         return "admin".equalsIgnoreCase(rol);
     }
 }
-

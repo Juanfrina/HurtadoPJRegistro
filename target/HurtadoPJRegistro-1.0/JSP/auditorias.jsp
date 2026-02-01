@@ -103,7 +103,7 @@
             </c:if>
             
             <div class="menu-opciones">
-                <a href="${contexto}/JSP/menu_admin.jsp" class="enlace-boton">Volver al menú</a>
+                <a href="${contexto}/JSP/menuAdmin.jsp" class="enlace-boton">Volver al menú</a>
             </div>
         </main>
     </body>

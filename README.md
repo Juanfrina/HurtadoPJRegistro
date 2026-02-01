@@ -54,7 +54,7 @@ Aplicación web desarrollada con patrón MVC, DAO y Factory que permite el acces
 
 ## Usuario Administrador
 - **Username**: admin
-- **Password**: admin123
+- **Password**: 123
 
 ## Flujo de la Aplicación
 
