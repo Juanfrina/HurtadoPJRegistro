@@ -42,6 +42,7 @@
             </c:if>
             
             <form id="formRegistro" action="${contexto}/RegistroController" method="post">
+                <input type="hidden" name="accion" value="registrar" />
                 <p class="subtitulo">* Datos personales</p>
                 
                 <table class="tabla-formulario">
@@ -50,7 +51,8 @@
                         <td>
                             <input type="text" id="nombre" name="nombre" 
                                    placeholder="Ej. Pedro"
-                                   value="${usuario.nombre}" required/>
+                                   value="${usuario.nombre}"
+                                   required/>
                         </td>
                     </tr>
                     <tr>
@@ -58,7 +60,8 @@
                         <td>
                             <input type="text" id="apellidos" name="apellidos" 
                                    placeholder="Ej. Sosa Hurtado"
-                                   value="${usuario.apellidos}" required/>
+                                   value="${usuario.apellidos}"
+                                   required/>
                         </td>
                     </tr>
                     <tr>
@@ -91,13 +94,17 @@
                         </td>
                     </tr>
                 </table>
-                
-                <div class="botones">
-                    <a href="#" onclick="return confirmarRegistro();" class="enlace-boton">Enviar</a>
-                    <a href="#" onclick="document.getElementById('formRegistro').reset();" class="enlace-boton">Limpiar</a>
-                    <a href="${contexto}/LoginController" class="enlace-boton">Cancelar</a>
+                <div class="menu-opciones">
+                    <button type="submit" class="enlace-boton" onclick="return confirmarRegistro();">Enviar</button>
+                    <button type="reset" class="enlace-boton">Limpiar</button>
                 </div>
             </form>
+            <div class="menu-opciones">
+                <form action="${contexto}/LoginController" method="post" style="display:inline;">
+                    <input type="hidden" name="accion" value="cancelar" />
+                    <button type="submit" class="enlace-boton">Cancelar</button>
+                </form>
+            </div>
         </main>
     </body>
 </html>

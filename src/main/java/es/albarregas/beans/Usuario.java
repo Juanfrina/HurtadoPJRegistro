@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Bean que representa un usuario del sistema.
- * 
+ *
  * @author jfco1
  */
 public class Usuario implements Serializable {

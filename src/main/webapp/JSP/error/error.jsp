@@ -24,7 +24,9 @@
                 <p class="mensaje-error">${pageContext.exception.message}</p>
             </c:if>
             <div class="menu-opciones">
-                <a href="${contexto}/LoginController" class="enlace-boton">Volver al inicio</a>
+                <form action="${contexto}/LoginController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Volver al inicio</button>
+                </form>
             </div>
         </main>
     </body>

@@ -22,7 +22,9 @@
             <p>Se ha producido un error interno en el servidor.</p>
             <p>Por favor, inténtelo de nuevo más tarde.</p>
             <div class="menu-opciones">
-                <a href="${contexto}/LoginController" class="enlace-boton">Volver al inicio</a>
+                <form action="${contexto}/LoginController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Volver al inicio</button>
+                </form>
             </div>
         </main>
     </body>

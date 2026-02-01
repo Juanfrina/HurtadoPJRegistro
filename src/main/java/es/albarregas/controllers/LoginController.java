@@ -32,19 +32,8 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Verificar si hay cookie de recordar usuario
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("recordarUsuario".equals(cookie.getName())) {
-                    request.setAttribute("usernameRecordado", cookie.getValue());
-                    break;
-                }
-            }
-        }
-
-        // Redirigir a la página de login
-        request.getRequestDispatcher("/JSP/login.jsp").forward(request, response);
+        // Rechazar peticiones GET - solo se permite POST
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Solo se permite POST");
     }
 
     @Override
@@ -54,6 +43,23 @@ public class LoginController extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String recordar = request.getParameter("recordar");
+
+        // Si no hay username ni password, mostrar formulario de login
+        if ((username == null || username.trim().isEmpty()) && 
+            (password == null || password.trim().isEmpty())) {
+            // Verificar si hay cookie de recordar usuario
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("recordarUsuario".equals(cookie.getName())) {
+                        request.setAttribute("usernameRecordado", cookie.getValue());
+                        break;
+                    }
+                }
+            }
+            request.getRequestDispatcher("/JSP/login.jsp").forward(request, response);
+            return;
+        }
 
         // Validar campos vacíos
         if (username == null || username.trim().isEmpty() ||

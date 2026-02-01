@@ -33,11 +33,17 @@ public class AuditoriaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Rechazar peticiones GET - solo se permite POST
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Solo se permite POST");
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // Verificar sesión y rol admin
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
-            response.sendRedirect(request.getContextPath() + "/LoginController");
+            request.getRequestDispatcher("/LoginController").forward(request, response);
             return;
         }
 
@@ -100,12 +106,6 @@ public class AuditoriaController extends HttpServlet {
         }
 
         request.getRequestDispatcher("/JSP/auditorias.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
     }
 
     @Override

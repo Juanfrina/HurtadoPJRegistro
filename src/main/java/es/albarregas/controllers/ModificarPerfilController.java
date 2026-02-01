@@ -31,16 +31,8 @@ public class ModificarPerfilController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // Verificar sesión
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("usuario") == null) {
-            response.sendRedirect(request.getContextPath() + "/LoginController");
-            return;
-        }
-
-        // Mostrar formulario de modificación
-        request.getRequestDispatcher("/JSP/modificarPerfil.jsp").forward(request, response);
+        // Rechazar peticiones GET - solo se permite POST
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Solo se permite POST");
     }
 
     @Override
@@ -50,12 +42,18 @@ public class ModificarPerfilController extends HttpServlet {
         // Verificar sesión
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
-            response.sendRedirect(request.getContextPath() + "/LoginController");
+            request.getRequestDispatcher("/LoginController").forward(request, response);
             return;
         }
 
         String accion = request.getParameter("accion");
         Usuario usuarioSesion = (Usuario) session.getAttribute("usuario");
+
+        // Si no hay acción, mostrar formulario de modificación
+        if (accion == null || accion.trim().isEmpty()) {
+            request.getRequestDispatcher("/JSP/modificarPerfil.jsp").forward(request, response);
+            return;
+        }
 
         if ("cancelar".equals(accion)) {
             // Volver al menú correspondiente

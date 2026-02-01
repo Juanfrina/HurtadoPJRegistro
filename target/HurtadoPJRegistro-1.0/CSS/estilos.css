@@ -130,8 +130,20 @@ input[type="checkbox"] {
 .botones {
     margin-top: 32px;
     display: flex;
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: 32px;
+    align-items: center;
+    gap: 15px;
+}
+
+.botones form {
+    display: inline-block;
+    margin: 0;
+}
+
+.botones a,
+.botones button {
+    margin: 0 5px;
 }
 
 
@@ -162,8 +174,20 @@ input[type="checkbox"] {
 .menu-opciones {
     margin-top: 36px;
     display: flex;
+    flex-wrap: nowrap;
     justify-content: center;
-    gap: 36px;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-opciones form {
+    display: inline-block;
+    margin: 0;
+}
+
+.menu-opciones a,
+.menu-opciones button {
+    margin: 0 5px;
 }
 
 /* Tablas de datos */

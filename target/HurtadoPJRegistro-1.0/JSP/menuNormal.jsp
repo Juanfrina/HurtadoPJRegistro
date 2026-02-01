@@ -1,5 +1,5 @@
 <%-- 
-    Document   : menuNormal
+    Document   : menu_normal
     Created on : 31 ene. 2026
     Author     : jfco1
     Descripción: Menú principal para usuarios normales
@@ -10,8 +10,16 @@
 
 <%-- Verificar sesión --%>
 <c:if test="${empty sessionScope.usuario}">
-    <c:redirect url="/LoginController"/>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <form id="redirigirLogin" action="${pageContext.request.contextPath}/LoginController" method="post"></form>
+        <script>document.getElementById('redirigirLogin').submit();</script>
+    </body>
+    </html>
+    <c:set var="redirigir" value="true"/>
 </c:if>
+<c:if test="${empty redirigir}">
 
 <c:set var="contexto" value="${pageContext.request.contextPath}" scope="request"/>
 <c:set var="usuario" value="${sessionScope.usuario}" scope="request"/>
@@ -43,9 +51,14 @@
             </p>
             
             <div class="menu-opciones">
-                <a href="${contexto}/ModificarPerfilController" class="enlace-boton">Modificar datos</a>
-                <a href="${contexto}/VolverController" class="enlace-boton">Salir</a>
+                <form action="${contexto}/ModificarPerfilController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Modificar datos</button>
+                </form>
+                <form action="${contexto}/VolverController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Salir</button>
+                </form>
             </div>
         </main>
     </body>
 </html>
+</c:if>

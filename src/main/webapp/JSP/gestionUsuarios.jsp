@@ -10,8 +10,16 @@
 
 <%-- Verificar sesión y rol admin --%>
 <c:if test="${empty sessionScope.usuario || sessionScope.usuario.rol != 'admin'}">
-    <c:redirect url="/LoginController"/>
+    <!DOCTYPE html>
+    <html lang="es">
+    <body>
+        <form id="redirigirLogin" action="${pageContext.request.contextPath}/LoginController" method="post"></form>
+        <script>document.getElementById('redirigirLogin').submit();</script>
+    </body>
+    </html>
+    <c:set var="redirigir" value="true"/>
 </c:if>
+<c:if test="${empty redirigir}">
 
 <c:set var="contexto" value="${pageContext.request.contextPath}" scope="request"/>
 
@@ -108,3 +116,4 @@
         </main>
     </body>
 </html>
+</c:if>

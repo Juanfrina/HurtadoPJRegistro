@@ -37,22 +37,30 @@ public class RegistroController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Mostrar formulario de registro
-        request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
+        // Rechazar peticiones GET - solo se permite POST
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Solo se permite POST");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+
         String accion = request.getParameter("accion");
 
+        // Si la acción es nula o "mostrar", solo mostrar el formulario sin errores
+        if (accion == null || "mostrar".equals(accion)) {
+            request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
+            return;
+        }
+
         if ("cancelar".equals(accion)) {
-            response.sendRedirect(request.getContextPath() + "/LoginController");
+            request.getRequestDispatcher("/LoginController").forward(request, response);
             return;
         }
 
         try {
+
             // Crear usuario y poblarlo con BeanUtils
             Usuario usuario = new Usuario();
             BeanUtils.populate(usuario, request.getParameterMap());
@@ -62,8 +70,21 @@ public class RegistroController extends HttpServlet {
                     usuario.getApellidos() == null || usuario.getApellidos().trim().isEmpty() ||
                     usuario.getUsername() == null || usuario.getUsername().trim().isEmpty() ||
                     usuario.getPassword() == null || usuario.getPassword().trim().isEmpty()) {
-
                 request.setAttribute("error", "Todos los campos son obligatorios");
+                request.setAttribute("usuario", usuario);
+                request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
+                return;
+            }
+
+            // Validar solo letras en nombre y apellidos
+            if (!usuario.getNombre().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+")) {
+                request.setAttribute("error", "El nombre solo puede contener letras");
+                request.setAttribute("usuario", usuario);
+                request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
+                return;
+            }
+            if (!usuario.getApellidos().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+")) {
+                request.setAttribute("error", "Los apellidos solo pueden contener letras");
                 request.setAttribute("usuario", usuario);
                 request.getRequestDispatcher("/JSP/registro.jsp").forward(request, response);
                 return;

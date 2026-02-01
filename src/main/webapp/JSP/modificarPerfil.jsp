@@ -9,8 +9,16 @@
 
 <%-- Verificar sesión --%>
 <c:if test="${empty sessionScope.usuario}">
-    <c:redirect url="/LoginController"/>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <form id="redirigirLogin" action="${pageContext.request.contextPath}/LoginController" method="post"></form>
+        <script>document.getElementById('redirigirLogin').submit();</script>
+    </body>
+    </html>
+    <c:set var="redirigir" value="true"/>
 </c:if>
+<c:if test="${empty redirigir}">
 
 <c:set var="contexto" value="${pageContext.request.contextPath}" scope="request"/>
 <c:set var="usuario" value="${sessionScope.usuario}" scope="request"/>
@@ -86,3 +94,4 @@
         </main>
     </body>
 </html>
+</c:if>

@@ -21,7 +21,9 @@
             <h1>Error 404</h1>
             <p>La página que busca no existe.</p>
             <div class="menu-opciones">
-                <a href="${contexto}/LoginController" class="enlace-boton">Volver al inicio</a>
+                <form action="${contexto}/LoginController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Volver al inicio</button>
+                </form>
             </div>
         </main>
     </body>

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/HurtadoPJRegistro">
     <!-- DataSource para usuario java2026: lectura, inserción y actualización de tabla usuarios -->
-    <Resource 
-        auth="Container" 
-        driverClassName="com.mysql.cj.jdbc.Driver" 
-        maxActive="100" 
-        maxIdle="30" 
-        maxWait="10000" 
-        name="jdbc/Usuario" 
-        password="Java*2026" 
-        type="javax.sql.DataSource" 
+    <Resource
+        auth="Container"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        maxActive="100"
+        maxIdle="30"
+        maxWait="10000"
+        name="jdbc/Usuario"
+        password="Java*2026"
+        type="javax.sql.DataSource"
         url="jdbc:mysql://localhost:3306/registro"
         username="java2026"/>
     
     <!-- DataSource para adminRegistro: cualquier operación sobre registro -->
-    <Resource 
-        auth="Container" 
-        driverClassName="com.mysql.cj.jdbc.Driver" 
-        maxActive="100" 
-        maxIdle="30" 
-        maxWait="10000" 
-        name="jdbc/AdminRegistro" 
-        password="Java*2025" 
-        type="javax.sql.DataSource" 
+    <Resource
+        auth="Container"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        maxActive="100"
+        maxIdle="30"
+        maxWait="10000"
+        name="jdbc/AdminRegistro"
+        password="Java*2025"
+        type="javax.sql.DataSource"
         url="jdbc:mysql://localhost:3306/registro"
         username="adminregistro"/>
 </Context>

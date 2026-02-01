@@ -1,5 +1,5 @@
 <%-- 
-    Document   : menuAdmin
+    Document   : menu_admin
     Created on : 31 ene. 2026
     Author     : jfco1
     Descripción: Menú principal para el administrador
@@ -10,13 +10,29 @@
 
 <%-- Verificar sesión --%>
 <c:if test="${empty sessionScope.usuario}">
-    <c:redirect url="/LoginController"/>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <form id="redirigirLogin" action="${pageContext.request.contextPath}/LoginController" method="post"></form>
+        <script>document.getElementById('redirigirLogin').submit();</script>
+    </body>
+    </html>
+    <c:set var="redirigir" value="true"/>
 </c:if>
+<c:if test="${empty redirigir}">
 
 <%-- Verificar que es admin --%>
 <c:if test="${sessionScope.usuario.rol != 'admin'}">
-    <c:redirect url="/JSP/menu_normal.jsp"/>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <form id="redirigirMenuNormal" action="${pageContext.request.contextPath}/JSP/menuNormal.jsp" method="get"></form>
+        <script>document.getElementById('redirigirMenuNormal').submit();</script>
+    </body>
+    </html>
+    <c:set var="redirigir2" value="true"/>
 </c:if>
+<c:if test="${empty redirigir2}">
 
 <c:set var="contexto" value="${pageContext.request.contextPath}" scope="request"/>
 <c:set var="usuario" value="${sessionScope.usuario}" scope="request"/>
@@ -45,10 +61,18 @@
             </p>
             
             <div class="menu-opciones">
-                <a href="${contexto}/AuditoriaController" class="enlace-boton">Auditoría</a>
-                <a href="${contexto}/GestionUserController" class="enlace-boton">Usuarios</a>
-                <a href="${contexto}/VolverController" class="enlace-boton">Salir</a>
+                <form action="${contexto}/AuditoriaController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Auditoría</button>
+                </form>
+                <form action="${contexto}/GestionUserController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Usuarios</button>
+                </form>
+                <form action="${contexto}/VolverController" method="post" style="display:inline;">
+                    <button type="submit" class="enlace-boton">Salir</button>
+                </form>
             </div>
         </main>
     </body>
 </html>
+</c:if>
+</c:if>

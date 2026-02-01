@@ -19,7 +19,8 @@ public class VolverController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        cerrarSesion(request, response);
+        // Rechazar peticiones GET - solo se permite POST
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Solo se permite POST");
     }
 
     @Override
@@ -29,15 +30,15 @@ public class VolverController extends HttpServlet {
     }
 
     private void cerrarSesion(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, ServletException {
         // Invalidar sesión
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }
 
-        // Redirigir al login
-        response.sendRedirect(request.getContextPath() + "/LoginController");
+        // Redirigir al login mediante forward (POST)
+        request.getRequestDispatcher("/LoginController").forward(request, response);
     }
 
     @Override

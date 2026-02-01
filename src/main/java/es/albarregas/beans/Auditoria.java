@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Bean que representa un registro de auditoría.
- * 
+ *
  * @author jfco1
  */
 public class Auditoria implements Serializable {

@@ -10,8 +10,16 @@
 
 <%-- Verificar sesión y rol admin --%>
 <c:if test="${empty sessionScope.usuario || sessionScope.usuario.rol != 'admin'}">
-    <c:redirect url="/LoginController"/>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <form id="redirigirLogin" action="${pageContext.request.contextPath}/LoginController" method="post"></form>
+        <script>document.getElementById('redirigirLogin').submit();</script>
+    </body>
+    </html>
+    <c:set var="redirigir" value="true"/>
 </c:if>
+<c:if test="${empty redirigir}">
 
 <c:set var="contexto" value="${pageContext.request.contextPath}" scope="request"/>
 
@@ -24,24 +32,11 @@
         <title>Auditorias</title>
         <script>
             function cargarFechas() {
-                var selectUsuario = document.getElementById('idUsuario');
-                var idUsuario = selectUsuario.value;
-                
-                if (idUsuario) {
-                    // Habilitar selector de fechas y redirigir
-                    window.location.href = '${contexto}/AuditoriaController?idUsuario=' + idUsuario;
-                }
+                document.getElementById('filtroForm').submit();
             }
             
             function cargarAuditorias() {
-                var selectUsuario = document.getElementById('idUsuario');
-                var selectFecha = document.getElementById('fecha');
-                var idUsuario = selectUsuario.value;
-                var fecha = selectFecha.value;
-                
-                if (idUsuario && fecha) {
-                    window.location.href = '${contexto}/AuditoriaController?idUsuario=' + idUsuario + '&fecha=' + fecha;
-                }
+                document.getElementById('filtroForm').submit();
             }
         </script>
     </head>
@@ -50,30 +45,32 @@
             <h1>Auditorías</h1>
             
             <div class="filtros">
-                <select id="idUsuario" name="idUsuario" onchange="cargarFechas()">
-                    <option value="">Selecciona un usuario</option>
-                    <option value="0" ${idUsuarioSeleccionado == 0 ? 'selected' : ''}>Todos</option>
-                    <c:forEach var="u" items="${usuarios}">
-                        <option value="${u.idUsuario}" ${idUsuarioSeleccionado == u.idUsuario ? 'selected' : ''}>
-                            ${u.nombre} ${u.apellidos}
-                        </option>
-                    </c:forEach>
-                </select>
-                
-                <select id="fecha" name="fecha" onchange="cargarAuditorias()"
-                        ${empty fechas ? 'disabled' : ''}>
-                    <option value="">Selecciona una fecha</option>
-                    <c:if test="${not empty fechas}">
-                        <option value="todas">Todas</option>
-                        <c:forEach var="f" items="${fechas}">
-                            <fmt:parseDate value="${f}" pattern="yyyy-MM-dd" var="fechaParsed" type="date"/>
-                            <fmt:formatDate value="${fechaParsed}" pattern="dd-MM-yyyy" var="fechaFormateada"/>
-                            <option value="${fechaFormateada}" ${fechaSeleccionada == fechaFormateada ? 'selected' : ''}>
-                                ${fechaFormateada}
+                <form id="filtroForm" action="${contexto}/AuditoriaController" method="post">
+                    <select id="idUsuario" name="idUsuario" onchange="cargarFechas()">
+                        <option value="">Selecciona un usuario</option>
+                        <option value="0" ${idUsuarioSeleccionado == 0 ? 'selected' : ''}>Todos</option>
+                        <c:forEach var="u" items="${usuarios}">
+                            <option value="${u.idUsuario}" ${idUsuarioSeleccionado == u.idUsuario ? 'selected' : ''}>
+                                ${u.nombre} ${u.apellidos}
                             </option>
                         </c:forEach>
-                    </c:if>
-                </select>
+                    </select>
+                    
+                    <select id="fecha" name="fecha" onchange="cargarAuditorias()"
+                            ${empty fechas ? 'disabled' : ''}>
+                        <option value="">Selecciona una fecha</option>
+                        <c:if test="${not empty fechas}">
+                            <option value="todas">Todas</option>
+                            <c:forEach var="f" items="${fechas}">
+                                <fmt:parseDate value="${f}" pattern="yyyy-MM-dd" var="fechaParsed" type="date"/>
+                                <fmt:formatDate value="${fechaParsed}" pattern="dd-MM-yyyy" var="fechaFormateada"/>
+                                <option value="${fechaFormateada}" ${fechaSeleccionada == fechaFormateada ? 'selected' : ''}>
+                                    ${fechaFormateada}
+                                </option>
+                            </c:forEach>
+                        </c:if>
+                    </select>
+                </form>
             </div>
             
             <%-- Mostrar tabla de auditorías si hay datos --%>
@@ -108,3 +105,4 @@
         </main>
     </body>
 </html>
+</c:if>

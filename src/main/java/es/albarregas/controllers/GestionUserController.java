@@ -33,11 +33,16 @@ public class GestionUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Rechazar peticiones GET - solo se permite POST
+        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Solo se permite POST");
+    }
 
+    private void cargarListaUsuarios(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // Verificar sesión y rol admin
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
-            response.sendRedirect(request.getContextPath() + "/LoginController");
+            request.getRequestDispatcher("/LoginController").forward(request, response);
             return;
         }
 
@@ -61,7 +66,7 @@ public class GestionUserController extends HttpServlet {
         // Verificar sesión y rol admin
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
-            response.sendRedirect(request.getContextPath() + "/LoginController");
+            request.getRequestDispatcher("/LoginController").forward(request, response);
             return;
         }
 
@@ -97,7 +102,7 @@ public class GestionUserController extends HttpServlet {
         }
 
         // Volver a cargar la lista
-        doGet(request, response);
+        cargarListaUsuarios(request, response);
     }
 
     @Override

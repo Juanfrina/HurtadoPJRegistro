@@ -50,13 +50,17 @@
                         </td>
                     </tr>
                 </table>
-                
-                <div class="botones">
-                    <a href="#" onclick="document.forms[0].submit();" class="enlace-boton">Acceder</a>
-                    <a href="#" onclick="document.forms[0].reset();" class="enlace-boton">Limpiar</a>
-                    <a href="${contexto}/RegistroController" class="enlace-boton">Registro</a>
+                <div class="menu-opciones">
+                    <button type="submit" class="enlace-boton">Acceder</button>
+                    <button type="reset" class="enlace-boton">Limpiar</button>
                 </div>
             </form>
+            <div class="menu-opciones">
+                <form id="formRegistroRedir" action="${contexto}/RegistroController" method="post" style="display:inline;">
+                    <input type="hidden" name="accion" value="mostrar" />
+                    <button type="submit" class="enlace-boton">Registro</button>
+                </form>
+            </div>
         </main>
     </body>
 </html>
