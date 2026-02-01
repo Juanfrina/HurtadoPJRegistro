@@ -10,7 +10,7 @@
         name="jdbc/Usuario" 
         password="Java*2026" 
         type="javax.sql.DataSource" 
-        url="jdbc:mysql://localhost:3306/registro?serverTimezone=Europe/Madrid&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+        url="jdbc:mysql://localhost:3306/registro"
         username="java2026"/>
     
     <!-- DataSource para adminRegistro: cualquier operación sobre registro -->
@@ -23,6 +23,6 @@
         name="jdbc/AdminRegistro" 
         password="Java*2025" 
         type="javax.sql.DataSource" 
-        url="jdbc:mysql://localhost:3306/registro?serverTimezone=Europe/Madrid&amp;useSSL=false&amp;allowPublicKeyRetrieval=true"
+        url="jdbc:mysql://localhost:3306/registro"
         username="adminregistro"/>
 </Context>
